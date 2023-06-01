@@ -10,6 +10,7 @@ class Rectangulo:public Figura{
         Rectangulo(double, double);
         double perimetro();
         double area();
+        double volumen();
         void imprimir();
 };
 

@@ -1,3 +1,4 @@
+/*
 #include "Figura.h"
 #include <iostream>
 using namespace std;
@@ -18,3 +19,4 @@ void Figura::imprimir(){
     cout<<"Soy una figura abstracta"<<endl;
 
 }
+*/

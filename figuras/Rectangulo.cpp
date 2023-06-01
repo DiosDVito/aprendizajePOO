@@ -21,6 +21,10 @@ double Rectangulo::area(){
    
 }
 
+double Rectangulo::volumen(){
+    return 0.0;
+}
+
 void Rectangulo::imprimir(){
     cout<<"Soy un rectangulo de largo: "<<this->largo<<" y ancho: "<<this->ancho<<endl;
 }

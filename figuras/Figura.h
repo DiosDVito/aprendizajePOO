@@ -5,10 +5,10 @@ using namespace std;
 
 class Figura{
     public:
-        double perimetro();
-        double area();
-        double volumen();
-        void imprimir();
+        virtual double perimetro()=0;
+        virtual double area()=0;
+        virtual double volumen()=0;
+        virtual void imprimir()=0;
         
 };
 #endif

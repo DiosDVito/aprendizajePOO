@@ -3,9 +3,37 @@
 #include "Cuadrado.h"
 #include "Caja.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main(){
+    vector<Figura*> figuras;
+
+    figuras.push_back(new Rectangulo(3.0,4.0));
+    figuras.push_back(new Cuadrado(5.0));
+    figuras.push_back(new Caja(2.0,4.0,6.0));
+
+    cout<<"Iterando Figuras"<<endl;
+    
+    for(int i=0;i<figuras.size();i++){
+        figuras[i]->imprimir();
+        cout<<"Perimetro: "<<figuras[i]->perimetro()<<endl;
+        cout<<"Area: "<<figuras[i]->area()<<endl;
+        cout<<"Volumen: "<<figuras[i]->volumen()<<endl;
+        //if(i==1){
+           Cuadrado* c=dynamic_cast<Cuadrado *>(figuras[i]);
+            c->saludar();
+        //}
+        cout<<endl;
+    }
+
+/*
+    figuras[0]->imprimir();
+    cout<<"Perimetro: "<<figuras[0]->perimetro()<<endl;
+    cout<<"Area: "<<figuras[0]->area()<<endl;
+    cout<<"Volumen: "<<figuras[0]->volumen()<<endl;
+    cout<<endl;
+
     Figura fig1;
     fig1.imprimir();
     cout<<"Perimetro: "<<fig1.perimetro()<<endl;
@@ -54,4 +82,5 @@ int main(){
     cout<<"Area: "<<caja2.area()<<endl;
     cout<<"Volumen: "<<caja2.volumen()<<endl;
     cout<<endl;
+*/
 }
