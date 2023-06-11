@@ -1,35 +1,29 @@
+//Daniel Esparza Arizpe 
+//Viernes 11 de junio 2023
+
 #ifndef HOTEL_H
 #define HOTEL_H
 
-#include "habitacion.h"
-#include "habitacionJunior.h"
-#include "habitacionSuite.h"
-#include "habitacionDeluxe.h"
-
 #include <string>
 #include <vector>
+#include "habitacion.h"
+#include "habitacionDeluxe.h"
+#include "habitacionJunior.h"
+#include "habitacionSuite.h"
 
 class Hotel {
 private:
-    std::vector<Habitacion*> habitaciones;
-    int numHabitaciones;
     std::string nombre;
+    std::vector<habitacion*> habitaciones;
 
 public:
-    explicit Hotel(const std::string& nombreHotel);
-    ~Hotel();
-
-    int checkin(const std::string& nombre, int adultos, int infantes, double credito, int tipoHabitacion);
-    bool checkout(int numeroHabitacion);
-    bool realizarCargosHabitacion(int numeroHabitacion, double cantidad);
+    Hotel(const std::string& nombreHotel, int numHabJunior, int numHabSuite, int numHabDeluxe);
+    int checkin(const std::string& nombreHuesped, int numAdultos, int numInfantes, double creditoAbierto);
+    bool checkout(int numHabitacion);
+    bool realizarCargosHabitacion(int numHabitacion, double cargo);
     double getTotalXTarifaBase() const;
     void imprimeOcupacion() const;
-    enum class TipoHabitacion {
-    Junior,
-    Suite,
-    Deluxe
+    double getIngresosPorTarifas() const;
 };
 
-};
-
-#endif
+#endif  // HOTEL_H

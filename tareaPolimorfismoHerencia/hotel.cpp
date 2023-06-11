@@ -1,88 +1,88 @@
+//Daniel Esparza Arizpe 
+//Viernes 11 de junio 2023
+
 #include "hotel.h"
-#include <iostream>
 
-Hotel::Hotel(const std::string& nombreHotel) : numHabitaciones(0), nombre(nombreHotel) {}
-
-Hotel::~Hotel() {
-    for (Habitacion* habitacion : habitaciones) {
-        delete habitacion;
+Hotel::Hotel(const std::string& nombreHotel, int numHabJunior, int numHabSuite, int numHabDeluxe) : nombre(nombreHotel)
+{
+    for (int i = 0; i < numHabJunior; i++) {
+        int numeroHabitacion = 100 + i;
+        habitaciones.push_back(new habitacionJunior(numeroHabitacion));
+    }
+    for (int i = 0; i < numHabSuite; i++) {
+        int numeroHabitacion = 100 + numHabJunior + i;
+        habitaciones.push_back(new habitacionSuite(numeroHabitacion));
+    }
+    for (int i = 0; i < numHabDeluxe; i++) {
+        int numeroHabitacion = 100 + numHabJunior + numHabSuite + i;
+        habitaciones.push_back(new habitacionDeluxe(numeroHabitacion));
     }
 }
 
-int Hotel::checkin(const std::string& nombre, int adultos, int infantes, double credito, int tipoHabitacion) {
-    if (numHabitaciones >= habitaciones.size()) {
-        std::cout << "No hay habitaciones disponibles." << std::endl;
-        return -1;
-    }
 
-    TipoHabitacion tipo = static_cast<TipoHabitacion>(tipoHabitacion - 1);
-    Habitacion* habitacion = nullptr;
+int Hotel::checkin(const std::string& nombreHuesped, int numAdultos, int numInfantes, double creditoAbierto)
+{
+    int tipoHabitacion;
+    std::cout << "¿Qué tipo de habitación le gustaría? 1=Junior, 2=Suite, 3=Deluxe: ";
+    std::cin >> tipoHabitacion;
 
-    for (Habitacion* habitacionExistente : habitaciones) {
-        if (habitacionExistente->isDisponible()) {
-            if ((tipo == TipoHabitacion::Junior && typeid(*habitacionExistente) == typeid(HabitacionJunior)) ||
-                (tipo == TipoHabitacion::Suite && typeid(*habitacionExistente) == typeid(HabitacionSuite)) ||
-                (tipo == TipoHabitacion::Deluxe && typeid(*habitacionExistente) == typeid(HabitacionDeluxe))) {
-                habitacion = habitacionExistente;
-                break;
+    for (habitacion* h : habitaciones) {
+        if (h->estaDisponible()&& h->getTipo() == tipoHabitacion) {
+            // Comprueba si la capacidad de la habitación es suficiente
+            if(h->getCapacidadMaxima() < numAdultos + numInfantes){
+                std::cout << "Lo siento, este tipo de habitación no puede acomodar a todos los huéspedes." << std::endl;
+                std::cout << "Por favor, intente con otro tipo de habitación o haga reservaciones separadas." << std::endl;
+                return -1;
             }
+
+            // Realiza el check-in si la capacidad de la habitación es suficiente
+            h->checkin(nombreHuesped, numAdultos, numInfantes, creditoAbierto);
+            return h->getNumero();
         }
     }
 
-    if (habitacion == nullptr) {
-        std::cout << "No hay habitaciones disponibles del tipo seleccionado." << std::endl;
-        return -1;
-    }
-
-    if (habitacion->checkin(nombre, adultos, infantes, credito)) {
-        return habitacion->getNumero();
-    } else {
-        std::cout << "No hay disponibilidad en el hotel o la capacidad de la habitacion es insuficiente." << std::endl;
-        return -1;
-    }
+    std::cout << "Lo sentimos, todas nuestras habitaciones de este tipo están ocupadas en este momento." << std::endl;
+    return -1;
 }
 
 
-bool Hotel::checkout(int numeroHabitacion) {
-    for (auto it = habitaciones.begin(); it != habitaciones.end(); ++it) {
-        if ((*it)->getNumero() == numeroHabitacion) {
-            bool checkoutSuccess = (*it)->checkout();
-            delete *it;
-            habitaciones.erase(it);
-            numHabitaciones--;
-            return checkoutSuccess;
+bool Hotel::checkout(int numHabitacion)
+{
+    for (habitacion* h : habitaciones) {
+        if (h->getNumero() == numHabitacion) {
+            return h->checkout();
         }
     }
-    return false;
+    return false; // Habitación no encontrada
 }
 
-bool Hotel::realizarCargosHabitacion(int numeroHabitacion, double cantidad) {
-    for (Habitacion* habitacion : habitaciones) {
-        if (habitacion->getNumero() == numeroHabitacion) {
-            return habitacion->realizarCargo(cantidad);
+bool Hotel::realizarCargosHabitacion(int numHabitacion, double cantidad)
+{
+    for (habitacion* h : habitaciones) {
+        if (h->getNumero() == numHabitacion) {
+            return h->realizarCargo(cantidad);
         }
     }
-    return false;
+    return false; // Habitación no encontrada
 }
 
-double Hotel::getTotalXTarifaBase() const {
+double Hotel::getTotalXTarifaBase() const
+{
     double total = 0.0;
-    for (const Habitacion* habitacion : habitaciones) {
-        total += habitacion->getTarifaBase();
+    for (const habitacion* h : habitaciones) {
+        if (!h->estaDisponible()) {
+            total += h->getTarifaBase();
+        }
     }
     return total;
 }
 
-void Hotel::imprimeOcupacion() const {
-    std::cout << "Ocupacion en " << nombre << std::endl;
-    for (const Habitacion* habitacion : habitaciones) {
-        std::cout << habitacion->toString() << ",";
-        if (dynamic_cast<const HabitacionJunior*>(habitacion) != nullptr) {
-            std::cout << "Habitación Junior" << std::endl;
-        } else if (dynamic_cast<const HabitacionSuite*>(habitacion) != nullptr) {
-            std::cout << "Habitación Suite" << std::endl;
-        } else if (dynamic_cast<const HabitacionDeluxe*>(habitacion) != nullptr) {
-            std::cout << "Habitación Deluxe" << std::endl;
+void Hotel::imprimeOcupacion() const
+{
+    std::cout << "Habitaciones ocupadas: " << nombre << std::endl;
+    for (const habitacion* h : habitaciones) {
+        if (!h->estaDisponible()) {
+            std::cout << h->toString() << std::endl;
         }
     }
 }

@@ -1,57 +1,94 @@
+//Daniel Esparza Arizpe 
+//Viernes 11 de junio 2023
+
+//Implementación de la clase habitacion
+
 #include "habitacion.h"
+#include <sstream>
 
-Habitacion::Habitacion() : numero(0), nombre(""), adultos(0), infantes(0), credito(0.0), cargo(0.0), disponible(true) {}
 
-Habitacion::Habitacion(int numero) : numero(numero), nombre(""), adultos(0), infantes(0), credito(0.0), cargo(0.0), disponible(true) {}
 
-int Habitacion::getNumero() const {
+//Constructor
+habitacion::habitacion(){
+    numero = 0;
+    disponible = true;
+    nombre = "";
+    adultos = 0;
+    infantes = 0;
+    credito = 0;
+    cargo = 0;
+}
+habitacion::habitacion(int numHab){
+    numero = numHab;
+    disponible = true;
+    nombre = "";
+    adultos = 0;
+    infantes = 0;
+    credito = 0;
+    cargo = 0;
+}
+
+//Getters
+int habitacion::getNumero() const {
     return numero;
 }
-
-bool Habitacion::isDisponible() const {
+bool habitacion::estaDisponible() const {
     return disponible;
 }
+int habitacion::getCapacidadMaxima() const {
+    return capacidadMax;
+}
 
-bool Habitacion::checkin(const std::string& nombre, int adultos, int infantes, double credito) {
+//Funcion check-in
+void habitacion::checkin(const std::string nomHues, int numAdultos, int numInfantes, double creditoAbierto){
+    nombre = nomHues;
+    adultos = numAdultos;
+    infantes = numInfantes;
+    credito = creditoAbierto;
+    disponible = false;
+    cargo = 0;
+}
+
+//Funcion check-out
+
+bool habitacion::checkout(){
     if (disponible) {
-        this->nombre = nombre;
-        this->adultos = adultos;
-        this->infantes = infantes;
-        this->credito = credito;
-        cargo = 0.0;
-        disponible = false;
-        return true;
+        return false; //La habitacion esta desocupada, no hay necesidad de hacer check-out
     }
-    return false;
+
+    nombre = "";
+    adultos = 0;
+    infantes = 0;
+    credito = 0;
+    disponible = true;
+    cargo = 0;
+
+
+    return true;
 }
 
-bool Habitacion::checkout() {
-    if (!disponible) {
-        this->nombre = "";
-        this->adultos = 0;
-        this->infantes = 0;
-        this->credito = 0.0;
-        this->cargo = 0.0;
-        disponible = true;
-        return true;
+//Funcion getTarifaBase
+
+double habitacion::getTarifaBase() const{
+    double tarifaAdulto = 450;
+    double tarifaInfante = 150;
+    double tarifaBase = adultos * tarifaAdulto + infantes * tarifaInfante;
+    return tarifaBase;
+}
+
+//Funcion realizarCargo
+
+bool habitacion::realizarCargo(double cantidad){
+    if (cantidad <= 0.0 || cantidad > credito - cargo){
+        return false; //No tiene credito suficiente
     }
-    return false;
+    
+    cargo += cantidad;
+    return true; //Se realizó exitosamente
 }
 
-double Habitacion::getTarifaBase() const {
-    return 450.0 * adultos + 150.0 * infantes;
-}
-
-bool Habitacion::realizarCargo(double cantidad) {
-    if (cantidad > 0.0 && cantidad <= credito) {
-        cargo += cantidad;
-        credito -= cantidad;
-        return true;
-    }
-    return false;
-}
-
-std::string Habitacion::toString() const {
-    return std::to_string(numero) + ",Huesped:" + nombre + ",Tarifa Base:" + std::to_string(getTarifaBase()) +
-           ",Credito:" + std::to_string(credito) + ",Cargos:" + std::to_string(cargo);
+std::string habitacion::toString() const {
+    std::ostringstream oss;
+    oss << numero << ",Huesped:" << nombre << ",Tarifa Base:" << getTarifaBase() << ",Crédito:" << credito << ",Cargos:" << cargo; //No podía llamar la funcion getTarifaBase asi que lo tuve que hacer de esta manera.
+    return oss.str();
 }

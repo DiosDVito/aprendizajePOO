@@ -1,129 +1,151 @@
-#include "hotel.h"
+//Daniel Esparza Arizpe 
+//Viernes 11 de junio 2023
+
 #include <iostream>
+#include "habitacion.h"
+#include "habitacionDeluxe.h"
+#include "habitacionJunior.h"
+#include "habitacionSuite.h"
+#include "hotel.h"
+
+void mostrarMenu() {
+    std::cout << "===== SERVICIO DE HOTELERIA =====" << std::endl;
+    std::cout << "1. Crear hotel" << std::endl;
+    std::cout << "2. Check-in" << std::endl;
+    std::cout << "3. Check-out" << std::endl;
+    std::cout << "4. Realizar cargo a habitación" << std::endl;
+    std::cout << "5. Ingresos por tarifas" << std::endl;
+    std::cout << "6. Habitaciones ocupadas" << std::endl;
+    std::cout << "0. Salir" << std::endl;
+    std::cout << "Ingrese la opción deseada: ";
+}
+
+int obtenerOpcion() {
+    int opcion;
+    std::cin >> opcion;
+    return opcion;
+}
 
 int main() {
-    Hotel* hotel = nullptr;
+    Hotel *hotel= nullptr;
+    bool hotelCreado = false;
 
     int opcion;
     do {
-        std::cout << "==== Menu ====" << std::endl;
-        std::cout << "1. Crear Hotel" << std::endl;
-        std::cout << "2. Hacer check-in" << std::endl;
-        std::cout << "3. Hacer check-out" << std::endl;
-        std::cout << "4. Realizar cargos a habitacion" << std::endl;
-        std::cout << "5. Ingresos por tarifas" << std::endl;
-        std::cout << "6. Generar reporte de ocupacion" << std::endl;
-        std::cout << "7. Salir" << std::endl;
-        std::cout << "Ingrese una opcion: ";
-        std::cin >> opcion;
+        mostrarMenu();
+        opcion = obtenerOpcion();
 
         if (opcion == 1) {
-            if (hotel != nullptr) {
-                delete hotel;
-            }
-
             std::string nombre;
-            int numJunior, numSuite, numDeluxe;
+            int numHabJunior, numHabSuite, numHabDeluxe;
 
-            std::cout << "Nombre del hotel: ";
+            std::cout << "Ingrese el nombre del hotel: ";
             std::cin.ignore();
             std::getline(std::cin, nombre);
-            std::cout << "Numero de habitaciones Junior: ";
-            std::cin >> numJunior;
-            std::cout << "Numero de habitaciones Suite: ";
-            std::cin >> numSuite;
-            std::cout << "Numero de habitaciones Deluxe: ";
-            std::cin >> numDeluxe;
 
-            hotel = new Hotel(nombre);
+            std::cout << "Ingrese el número de habitaciones Junior: ";
+            std::cin >> numHabJunior;
 
-            for (int i = 0; i < numJunior; i++) {
-                hotel->checkin("", 0, 0, 0.0, 1);
-            }
-            for (int i = 0; i < numSuite; i++) {
-                hotel->checkin("", 0, 0, 0.0, 2);
-            }
-            for (int i = 0; i < numDeluxe; i++) {
-                hotel->checkin("", 0, 0, 0.0, 3);
-            }
-        } else if (opcion == 2) {
-            if (hotel == nullptr) {
-                std::cout << "No se ha creado un hotel." << std::endl;
+            std::cout << "Ingrese el número de habitaciones Suite: ";
+            std::cin >> numHabSuite;
+
+            std::cout << "Ingrese el número de habitaciones Deluxe: ";
+            std::cin >> numHabDeluxe;
+
+            hotel = new Hotel(nombre, numHabJunior, numHabSuite, numHabDeluxe); 
+            hotelCreado = true;
+
+       }  else if (opcion == 2) {
+            std::string nombre;
+            int numAdultos, numInfantes;
+            double creditoAbierto;
+
+            if (!hotelCreado) {
+            std::cout << "Debe crear un hotel antes de utilizar esta opción." << std::endl;
+        }
+            else {
+            std::cout << "Ingrese el nombre del huésped: ";
+            std::cin.ignore();
+            std::getline(std::cin, nombre);
+
+            std::cout << "Ingrese el número de adultos: ";
+            std::cin >> numAdultos;
+
+            std::cout << "Ingrese el número de infantes: ";
+            std::cin >> numInfantes;
+
+            std::cout << "Ingrese el crédito abierto: ";
+            std::cin >> creditoAbierto;
+
+            int numHabitacion = hotel->checkin(nombre, numAdultos, numInfantes, creditoAbierto);
+            if (numHabitacion != -1) {
+                std::cout << "Check-in exitoso. Habitación asignada: #" << numHabitacion << std::endl;
             } else {
-                std::string nombre;
-                int adultos, infantes, tipoHabitacion;
+                std::cout << "El hotel está lleno. No se pudo realizar el check-in." << std::endl;
+            }
+        } }
+        else if (opcion == 3) {
+            int numHabitacion;
+            if (!hotelCreado) {
+            std::cout << "Debe crear un hotel antes de utilizar esta opción." << std::endl;
+        }
+            else {
 
-                std::cout << "Nombre del huesped: ";
-                std::cin.ignore();
-                std::getline(std::cin, nombre);
-                std::cout << "Numero de adultos: ";
-                std::cin >> adultos;
-                std::cout << "Numero de infantes: ";
-                std::cin >> infantes;
-                std::cout << "Tipo de habitacion (1=Junior, 2=Suite, 3=Deluxe): ";
-                std::cin >> tipoHabitacion;
+            std::cout << "Ingrese el número de habitación a hacer check-out: ";
+            std::cin >> numHabitacion;
 
-                int numHabitacion = hotel->checkin(nombre, adultos, infantes, 0.0, tipoHabitacion);
-                if (numHabitacion != -1) {
-                    std::cout << "Check-in exitoso. Habitacion asignada: " << numHabitacion << std::endl;
-                }
-            }
-        } else if (opcion == 3) {
-            if (hotel == nullptr) {
-                std::cout << "No se ha creado un hotel." << std::endl;
+            bool checkoutExitoso = hotel->checkout(numHabitacion);
+            if (checkoutExitoso) {
+                std::cout << "Check-out exitoso de la habitación #" << numHabitacion << std::endl;
             } else {
-                int numHabitacion;
-                std::cout << "Numero de habitacion: ";
-                std::cin >> numHabitacion;
+                std::cout << "No se pudo realizar el check-out de la habitación #" << numHabitacion << std::endl;
+            }
+        }} else if (opcion == 4) {
+            int numHabitacion;
+            double cantidad;
+            if (!hotelCreado) {
+            std::cout << "Debe crear un hotel antes de utilizar esta opción." << std::endl;
+        }
+            else {
 
-                if (hotel->checkout(numHabitacion)) {
-                    std::cout << "Check-out exitoso." << std::endl;
-                } else {
-                    std::cout << "La habitacion no existe o no estaba ocupada." << std::endl;
-                }
-            }
-        } else if (opcion == 4) {
-            if (hotel == nullptr) {
-                std::cout << "No se ha creado un hotel." << std::endl;
-            } else {
-                int numHabitacion;
-                double cantidad;
-                std::cout << "Numero de habitacion: ";
-                std::cin >> numHabitacion;
-                std::cout << "Cantidad a cargar: ";
-                std::cin >> cantidad;
+            std::cout << "Ingrese el número de habitación: ";
+            std::cin >> numHabitacion;
 
-                if (hotel->realizarCargosHabitacion(numHabitacion, cantidad)) {
-                    std::cout << "Cargo realizado exitosamente." << std::endl;
-                } else {
-                    std::cout << "La habitacion no existe o no estaba ocupada, o el cargo excede el credito disponible." << std::endl;
-                }
-            }
-        } else if (opcion == 5) {
-            if (hotel == nullptr) {
-                std::cout << "No se ha creado un hotel." << std::endl;
+            std::cout << "Ingrese la cantidad a cargar: ";
+            std::cin >> cantidad;
+
+            bool cargoExitoso = hotel->realizarCargosHabitacion(numHabitacion, cantidad);
+            if (cargoExitoso) {
+                std::cout << "Cargo exitoso en la habitación #" << numHabitacion << std::endl;
             } else {
-                double total = hotel->getTotalXTarifaBase();
-                std::cout << "Total recaudado por tarifa base: " << total << std::endl;
+                std::cout << "No se pudo realizar el cargo en la habitación #" << numHabitacion << std::endl;
             }
-        } else if (opcion == 6) {
-            if (hotel == nullptr) {
-                std::cout << "No se ha creado un hotel." << std::endl;
-            } else {
-                hotel->imprimeOcupacion();
-            }
-        } else if (opcion == 7) {
-            std::cout << "Saliendo del programa..." << std::endl;
+        }} 
+            else if (opcion == 5) {
+            if (!hotelCreado) {
+            std::cout << "Debe crear un hotel antes de utilizar esta opción." << std::endl;
+        }
+            else {
+            double ingresos = hotel->getTotalXTarifaBase();
+            std::cout << "Los ingresos por tarifas son: $" << ingresos << std::endl;
+        }}
+            else if (opcion == 6) {
+            if (!hotelCreado) {
+            std::cout << "Debe crear un hotel antes de utilizar esta opción." << std::endl;
+        }
+            else {
+            hotel->imprimeOcupacion();
+        }} else if (opcion == 0) {
+            delete hotel;
+            std::cout << "Saliendo del programa." << std::endl;
         } else {
-            std::cout << "Opcion no valida. Intente de nuevo." << std::endl;
+            std::cout << "Opción inválida. Por favor, seleccione una opción válida." << std::endl;
         }
 
-        std::cout << std::endl;
-    } while (opcion != 7);
+    } while (opcion != 0);
 
-    if (hotel != nullptr) {
-        delete hotel;
-    }
-
+if (hotel != nullptr) {
+    delete hotel;
+}
     return 0;
 }
