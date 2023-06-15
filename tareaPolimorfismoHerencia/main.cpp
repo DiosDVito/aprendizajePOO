@@ -81,7 +81,7 @@ int main() {
             if (numHabitacion != -1) {
                 std::cout << "Check-in exitoso. Habitación asignada: #" << numHabitacion << std::endl;
             } else {
-                std::cout << "El hotel está lleno. No se pudo realizar el check-in." << std::endl;
+                std::cout << "No se pudo realizar el check-in." << std::endl;
             }
         } }
         else if (opcion == 3) {
