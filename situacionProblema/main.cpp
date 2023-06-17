@@ -12,10 +12,7 @@
 #include <cctype>
 #include <fstream>
 
-
-
 using namespace std;
-
 
 int main() {
     fstream archivo("videos.txt");
@@ -61,109 +58,102 @@ int main() {
         cout << "No se pudo abrir el archivo." << endl;
     }
 
-    //Menu
-    int opcion = 9;
-    while (opcion != 0) {
-        cout << "===== BIENVENIDO A CISFI STREAMING SERVICES =====" << endl;
-        cout << "1. Mostrar todo el catalogo con calificaciones" << endl;
-        cout << "2. Calificar un video" << endl;
-        cout << "3. Mostrar peliculas o capitulos con una calificacion mínima determinada" << endl;
-        cout << "4. Mostrar peliculas o capitulos de un cierto genero" << endl;
-        cout << "0. Salir" << endl;
+//Menu
+int opcion = 9;
+while (opcion != 0) {
+    cout << "===== BIENVENIDO A CISFI STREAMING SERVICES =====" << endl;
+    cout << "1. Mostrar todo el catalogo con calificaciones" << endl;
+    cout << "2. Calificar un video" << endl;
+    cout << "3. Mostrar peliculas o capitulos con una calificacion mínima determinada" << endl;
+    cout << "4. Mostrar peliculas o capitulos de un cierto genero" << endl;
+    cout << "0. Salir" << endl;
 
-        cout << "Ingrese una opcion: ";
-        cin >> opcion;
+    cout << "Ingrese una opcion: ";
+    cin >> opcion;
 
-        switch (opcion) {
-            case 1:
-                cout << "Id, Nombre, Duracion, Genero, (Serie, Episodio), Calificacion"<<endl;
-                for(Video* video : videos){
-                    cout<< *video << endl;
-                }
-                break;
-            case 2:
-            {
-                string videoID = "";
-                bool videoEncontrado = false;
-                cout << "Ingrese el ID del video a calificar: ";
-                cin >> videoID;
-                for(Video* video : videos) {
-                    if (video->getId() == videoID) {
-                        videoEncontrado = true;
+    if (opcion == 1) {
+        cout << "Id, Nombre, Duracion, Genero, (Serie, Episodio), Calificacion"<<endl;
+        for(Video* video : videos){
+            cout<< *video << endl;
+        }
+    } 
+    else if (opcion == 2) {
+        string videoID = "";
+        bool videoEncontrado = false;
+        cout << "Ingrese el ID del video a calificar: ";
+        cin >> videoID;
+        for(Video* video : videos) {
+            if (video->getId() == videoID) {
+                videoEncontrado = true;
 
-                        int calificacion;
-                        cout << "Ingrese la calificacion (1-5): ";
-                        cin >> calificacion;
-
-                        while (!cin || calificacion < 1 || calificacion > 5) {
-                            cout << "Calificacion invalida. Ingrese un valor entero entre 1 y 5: ";
-                            cin.clear();
-                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                            cin >> calificacion;
-                        }
-
-                        video->calificar(calificacion);
-
-                        cout << "Video calificado correctamente" << endl;
-                        break;
-                    }
-                }
-
-                    if (!videoEncontrado) {
-                        cout << "No se encontro el ID." << endl;
-                    }
-                break;
-            }
-            case 3:
-                {
-
-                int opcion = 0;
-                cout << "===== BUSCAR POR CALIFICACION MINIMA =====" << endl;
-                cout << "1. Ver peliculas" << endl;
-                cout << "2. Ver capitulos" << endl;
-                cout << "3. Ver ambos" << endl;
-                cout << "Seleccione una opción: ";
-                cin >> opcion;
-                while (!cin || opcion < 1 || opcion > 3) {
-                    cout << "Opcion invalida. Ingrese un valor entre 1 y 3: ";
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cin >> opcion;
-                }
-
-
-                double calificacion=0.0;
-                cout << "Ingrese la calificacion minima (1-5): ";
+                int calificacion;
+                cout << "Ingrese la calificacion (1-5): ";
                 cin >> calificacion;
+
                 while (!cin || calificacion < 1 || calificacion > 5) {
-                    cout << "Calificacion invalida. Debe ser entre 1 y 5: ";
+                    cout << "Calificacion invalida. Ingrese un valor entero entre 1 y 5: ";
                     cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     cin >> calificacion;
                 }
 
-                cout << "Id, Nombre, Calificacion"<<endl;
-                for(Video* video : videos) { 
-                    if (opcion == 1 && dynamic_cast<Pelicula*>(video)) {
-                        if (video->getCalificacion() >= calificacion) {
-                            cout << video->imprimirCal() << endl;
-                        }
-                    }
-                    else if (opcion == 2 && dynamic_cast<Episodio*>(video)) {
-                        if (video->getCalificacion() >= calificacion) {
-                            cout << video->imprimirCal() << endl;
-                        }
-                    }
-                    else if (opcion == 3) {
-                        if (video->getCalificacion() >= calificacion) {
-                            cout << video->imprimirCal() << endl;
-                        }
-                    }
-                }
+                video->calificar(calificacion);
+
+                cout << "Video calificado correctamente" << endl;
                 break;
             }
-            case 4:
-    {
+        }
+
+        if (!videoEncontrado) {
+            cout << "No se encontro el ID." << endl;
+        }
+    }
+    else if (opcion == 3) {
+        int opcion = 0;
+        cout << "===== BUSCAR POR CALIFICACION MINIMA =====" << endl;
+        cout << "1. Ver peliculas" << endl;
+        cout << "2. Ver capitulos" << endl;
+        cout << "3. Ver ambos" << endl;
+        cout << "Seleccione una opción: ";
+        cin >> opcion;
+        while (!cin || opcion < 1 || opcion > 3) {
+            cout << "Opcion invalida. Ingrese un valor entre 1 y 3: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin >> opcion;
+        }
+
+
+        double calificacion=0.0;
+        cout << "Ingrese la calificacion minima (1-5): ";
+        cin >> calificacion;
+        while (!cin || calificacion < 1 || calificacion > 5) {
+            cout << "Calificacion invalida. Debe ser entre 1 y 5: ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin >> calificacion;
+        }
+
+        cout << "Id, Nombre, Calificacion"<<endl;
+        for(Video* video : videos) { 
+            if (opcion == 1 && dynamic_cast<Pelicula*>(video)) {
+                if (video->getCalificacion() >= calificacion) {
+                    cout << video->imprimirCal() << endl;
+                }
+            }
+            else if (opcion == 2 && dynamic_cast<Episodio*>(video)) {
+                if (video->getCalificacion() >= calificacion) {
+                    cout << video->imprimirCal() << endl;
+                }
+            }
+            else if (opcion == 3) {
+                if (video->getCalificacion() >= calificacion) {
+                    cout << video->imprimirCal() << endl;
+                }
+            }
+        }
+    }
+    else if (opcion == 4) {
         int opcion = 0;
         cout << "===== BUSCAR POR GENERO =====" << endl;
         cout << "1. Ver peliculas" << endl;
@@ -206,24 +196,19 @@ int main() {
                 }
             }
         }
-
         if (!found) {
             cout << "No se encontraron videos con el genero " << genero << "." << endl;
         }
-
-        break;
+    } 
+    else if (opcion == 0) {
+        cout << "Adios!" << endl;
+    } 
+    else {
+        cout << "Opción invalida. Intente nuevamente." << endl;
     }
 
-            case 0:
-                cout << "Adios!" << endl;
-                break;
-            default:
-                cout << "Opción invalida. Intente nuevamente." << endl;
-                break;
-        }
+    cout << endl;
+}  
+return 0;
 
-        cout << endl;
-    }
-    
-    return 0;
 }
