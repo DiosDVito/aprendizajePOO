@@ -1,45 +1,64 @@
-#include "Video.h"
-#include <iostream>
-#include <iomanip>
-#include <stdexcept>
-#include <numeric>
+//Daniel Esparza Arizpe - A01637076
+//Sabado 17 de junio 2023
 
-Video::Video(const std::string& codigo, const std::string& titulo, int duracion, const std::string& genero)
-    : codigo(codigo), titulo(titulo), duracion(duracion), genero(genero) {}
+#include "video.h"
+#include <string>
+using namespace std;
 
-std::string Video::obtener_codigo() const {
-    return codigo;
+Video::Video():Video("","",0,""){}
+
+Video::Video(string id, string nombre, int duracion, string genero){
+    this->id = id;
+    this->nombre = nombre;
+    this->duracion = duracion;
+    this->genero = genero;
+
+    sumcal = 0;
+    numcal = 0;
+    calificacion = 0;
 }
 
-std::string Video::obtener_titulo() const {
-    return titulo;
+Video::~Video(){}
+
+void Video::calificar(int cal){
+    this->sumcal += cal;
+    this->numcal++;
+    this->calcCalificacionPromedio();
 }
 
-std::string Video::obtener_genero() const {
-    return genero;
-}
-
-int Video::obtener_duracion() const {
-    return duracion;
-}
-
-void Video::agregar_calificacion(int calificacion) {
-    if (calificacion < 1 || calificacion > 5) {
-        std::cout << "La calificacion debe estar en el rango de 1 a 5" << std::endl;
+void Video::calcCalificacionPromedio(){
+    if (this->numcal !=0){
+        this->calificacion = (double)this->sumcal/this->numcal;
     }
-    calificaciones.push_back(calificacion);
 }
 
-float Video::calcular_calificacion_promedio() const {
-    return std::accumulate(calificaciones.begin(), calificaciones.end(), 0.0) / calificaciones.size();
+string Video::getId(){
+    return this->id;
 }
 
-std::ostream& operator<<(std::ostream& os, const Video& video) {
-    os << video.codigo << "," << video.titulo << "," << video.duracion << "," << video.genero << ",";
-    if (video.calificaciones.empty()) {
-        os << "SC";
-    } else {
-        os << video.calcular_calificacion_promedio();
+string Video::getGenero(){
+    return this->genero;
+}
+
+double Video::getCalificacion(){
+    return this->calificacion;
+}
+
+
+string Video::calSC(){
+    if (this->sumcal != 0)
+    {
+        return to_string(this->calificacion);
+    }else{
+        return "SC";
     }
-    return os;
 }
+
+string Video::imprimirGenero(){
+    return   this->id + ", " + this->nombre + ", " + this->genero + ", " + calSC();
+}
+
+string Video::imprimirCal(){
+    return   this->id + ", " + this->nombre + ", " + calSC();
+}
+

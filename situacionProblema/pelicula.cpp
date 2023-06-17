@@ -1,8 +1,17 @@
-#include "Pelicula.h"
+//Daniel Esparza Arizpe - A01637076
+//Sabado 17 de junio 2023
 
-Pelicula::Pelicula(const std::string& codigo, const std::string& titulo, int duracion, const std::string& genero)
-    : Video(codigo, titulo, duracion, genero) {}
+#include "pelicula.h"
+#include <string>
+using namespace std;
 
-void Pelicula::mostrarDetalles() const {
-    std::cout << *this << std::endl;
+Pelicula::Pelicula():Video(){}
+
+Pelicula::Pelicula(string id, string nombre, int duracion, string genero):Video(id, nombre, duracion, genero){}
+
+Pelicula::~Pelicula(){}
+
+string Pelicula::imprimir(){
+    return this->id + ", " + this->nombre + ", " + to_string(this->duracion) + ", " + this->genero + ", " + calSC();
 }
+

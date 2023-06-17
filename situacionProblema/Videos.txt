@@ -1,5 +1,4 @@
-
-c,20160150-S02E09,Chapter Nine: The Gate,62,accion,Stranger Things T2,9
-p,20051245,Revenge of the Sith,121,accion
 p,20191245,The Lion King,118,drama
-p,20195421,Harry Potter,118,adventure
+c,20160150-S02E09,Chapter Nine: The Gate,62,accion,Stranger Things T2,9
+c,20160150-S02E10,Chapter Ten: HaHa,62,accion,Stranger Things T2,10
+p,20181245,Star Wars,118,aventura

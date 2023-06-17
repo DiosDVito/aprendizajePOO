@@ -1,32 +1,43 @@
+//Daniel Esparza Arizpe - A01637076
+//Sabado 17 de junio 2023
+
 #ifndef VIDEO_H
 #define VIDEO_H
-
 #include <string>
-#include <vector>
 #include <iostream>
+using namespace std;
 
-class Video {
-protected:
-    std::string codigo;
-    std::string titulo;
-    int duracion;
-    std::string genero;
-    std::vector<int> calificaciones;
+class Video{
+    protected:
+        string id;
+        string nombre;
+        int duracion;
+        string genero;
 
-public:
-    Video(const std::string& codigo, const std::string& titulo, int duracion, const std::string& genero);
-    virtual ~Video() = default;
+        int sumcal;
+        int numcal;
+        double calificacion;
 
-    std::string obtener_codigo() const;
-    std::string obtener_titulo() const;
-    std::string obtener_genero() const;
-    int obtener_duracion() const;
-    void agregar_calificacion(int calificacion);
-    float calcular_calificacion_promedio() const;
-    friend std::ostream& operator<<(std::ostream& os, const Video& video);
-    virtual void mostrarDetalles() const = 0;
+    public:
+        Video();
+        Video(string, string, int, string);
+        ~Video();
 
+        void calificar(int);
+        void calcCalificacionPromedio();
+        virtual string imprimir()=0;
+        string imprimirCal();
+        string imprimirGenero();
+        string calSC();
+
+        string getId();
+        double getCalificacion();
+        string getGenero();
+    
+    friend ostream& operator<< (ostream& os, Video& vid){
+        os << vid.imprimir() ;
+        return os;
+        }
+    
 };
-
-
 #endif
